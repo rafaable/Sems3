@@ -260,4 +260,95 @@ cp template_risk_register.md ~/Lab-Notes/Bab-04-Vuln-Scan/risk-register.md
 ## Validasi Manual yang Sudah Dilakukan
 > Untuk minimal 1 temuan teratas, jelaskan langkah validasi manual yang kamu lakukan (bukan sekadar percaya skor scanner mentah-mentah).
 
+# Bab 4 (Praktikum) — Vulnerability Scanning
+
+Di bab praktikum ini kita akan pasang "mesin scanner" sungguhan, arahkan ke target-target yang sudah kita kenal dari bab-bab sebelumnya, dan yang paling penting: belajar membaca hasilnya dengan kepala dingin, bukan langsung panik atau langsung percaya buta.
+
+## 4.1 Target yang Dipakai
+
+- **Metasploitable2** — lanjutan dari Bab 3, pastikan VM/container ini masih jalan.
+- **DVWA (Damn Vulnerable Web Application)** — target baru untuk bab ini, akan kita deploy lewat Docker.
+
+## 4.2 Deploy DVWA
+
+```bash
+docker compose up -d dvwa
+```
+
+Akses `http://localhost:8081` dari browser, lalu klik tombol setup database di halaman awal (DVWA butuh inisialisasi database sekali di awal — ikuti saja tombol yang muncul di layar, cukup klik "Create / Reset Database").
+
+Login default DVWA: `admin` / `password`.
+
+## 4.3 Deploy OpenVAS/Greenbone Community Edition
+
+Scanner ini agak "berat" dibanding target-target sebelumnya (butuh waktu inisialisasi database NVT yang cukup lama di jalankan pertama kali), jadi bersabar ya:
+
+```bash
+docker compose up -d openvas
+```
+
+Proses inisialisasi pertama kali bisa memakan waktu **15–30 menit** (mengunduh dan sinkronisasi feed NVT). Cek statusnya dengan:
+
+```bash
+docker logs -f openvas-scanner
+```
+
+Setelah muncul indikasi siap (biasanya pesan terkait GSA/web service sudah berjalan), akses web interface di `https://localhost:9392` (perhatikan **https**, bukan http, dan browser akan komplain soal sertifikat self-signed — itu wajar untuk lab lokal, klik "lanjutkan" atau "advanced → proceed").
+
+Login menggunakan kredensial yang tercantum di `README.md` paket resource (di-generate otomatis saat container pertama kali start — cek juga log container kalau kredensial berubah).
+
+## 4.4 Menjalankan Unauthenticated Scan ke Metasploitable2
+
+1. Di web interface Greenbone, masuk ke menu **Configuration → Targets**, buat target baru dengan IP Metasploitable2.
+2. Masuk ke **Scans → Tasks**, buat task baru, pilih target yang barusan dibuat, gunakan scan config **"Full and fast"**.
+3. Jalankan task, tunggu sampai selesai (bisa 10-20 menit tergantung resource laptop).
+4. Setelah selesai, buka hasilnya di **Scans → Results**.
+
+## 4.5 Menjalankan Authenticated Scan
+
+Kali ini kita masukkan kredensial supaya scan bisa "masuk lebih dalam":
+
+1. Masuk ke **Configuration → Credentials**, buat credential baru dengan username `msfadmin` dan password `msfadmin` (kredensial default Metasploitable2).
+2. Edit target Metasploitable2 yang sudah dibuat sebelumnya, tambahkan credential SSH tersebut.
+3. Jalankan ulang scan (bisa buat task baru atau clone task sebelumnya).
+4. Bandingkan jumlah dan kedalaman temuan dibanding scan unauthenticated tadi — kamu akan lihat perbedaannya cukup signifikan.
+
+## 4.6 Vulnerability Scan Terarah dengan Nmap NSE
+
+Sebagai pembanding cepat, dari Kali jalankan:
+
+```bash
+nmap --script vuln <IP-Metasploitable2> -oN ~/Lab-Notes/Bab-04-Vuln-Scan/nmap-vuln-scan.txt
+```
+
+Bandingkan hasilnya dengan temuan OpenVAS — apakah ada yang saling melengkapi? Ada yang cuma terdeteksi salah satu?
+
+## 4.7 Scan DVWA
+
+Ulangi proses target + task di Greenbone, kali ini arahkan ke DVWA (`http://localhost:8081`). Perhatikan: scanner web umumnya perlu tahu ini target web application (pilih scan config yang sesuai, atau tetap gunakan "Full and fast" untuk latihan awal).
+
+## 4.8 Menyusun Risk Register
+
+Sekarang bagian terpenting: pindahkan seluruh temuan (dari kedua target, gabungan OpenVAS + Nmap NSE) ke `template_risk_register.md`. Untuk setiap temuan, isi kolom likelihood dan impact berdasarkan penilaianmu sendiri — bukan cuma nyalin skor CVSS mentah.
+
+Minimal harus ada **5 temuan** yang terurut prioritas di risk register akhirmu.
+
+## Checkpoint Praktikum
+
+- [ ] DVWA berhasil di-setup dan bisa diakses.
+- [ ] OpenVAS/Greenbone berhasil dijalankan dan web interface bisa diakses.
+- [ ] Unauthenticated scan terhadap Metasploitable2 selesai dan hasilnya sudah dibaca.
+- [ ] Authenticated scan terhadap Metasploitable2 selesai, dan kamu sudah membandingkan hasilnya dengan scan unauthenticated.
+- [ ] Nmap `--script vuln` sudah dijalankan sebagai pembanding.
+- [ ] Risk register (`template_risk_register.md`) sudah terisi minimal 5 temuan terprioritas.
+
+## Sumber Daya Pendukung
+
+Semua file teknis — `docker-compose.yml` (OpenVAS/Greenbone + DVWA), provisioning Vagrant untuk Kali, dan template risk register — ada di paket resource yang menyertai modul ini. Cek `README.md` untuk kredensial default dan troubleshooting umum (terutama soal waktu inisialisasi OpenVAS yang cukup lama).
+
+
+## YouTube Tutorial
+
+https://youtu.be/lqCSdrRq9bg
+
 
