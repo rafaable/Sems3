@@ -176,9 +176,190 @@ end
 Tracert dari utara harus kembali  
 <br><img width="425" height="151" alt="image" src="https://github.com/user-attachments/assets/03282998-7fed-4a40-b065-e7e2638c38dc" /><br>
 
+## Memeriksa passive interface
+```
+! Di R-PUSAT
+show ip protocols
+```
+<br><img width="580" height="484" alt="image" src="https://github.com/user-attachments/assets/f7cc1947-1669-470c-8910-9b410b83e814" /><br>
+- Interface LAN menggunakan passive-interface
+- Interface antar-router tidak passive
+- Jaringan yang diumumkan sudah sesuai
+- OSPF berjalan pada Area 0
 
+## Menguji jalur tunnel
+Dari PC Balai, `tracert` ke pelabuhan `10.113.160.2`  
+<br><img width="525" height="291" alt="image" src="https://github.com/user-attachments/assets/f4cd2320-ddbc-4600-9c50-d647336c67f0" /><br>  
+Bukti paket berangkat lewat tunnel : Jalur fisik pasti punya hop R-UTARA (10.113.66.2) di tengah dengan total empat hop. Hasil tracert hanya menunjukkan tiga hop (R-PUSAT, R-PELABUHAN, lalu PC) yang menunjukkan tunnel sudah dipakai  
 
+Jika kita periksa di R-PUSAT, maka akan terlihat bahwa jalur menuju kantor pelabuhan akan melewati IP tunnel dengan keterangan tunnel0  
+<br><img width="510" height="114" alt="image" src="https://github.com/user-attachments/assets/eda44e50-30ac-407d-9f5e-d7fe11712664" /><br>  
+
+## Tes internet
+```
+ping 8.8.8.8
+```
+<br><img width="495" height="332" alt="image" src="https://github.com/user-attachments/assets/dd65aa38-70d3-4f01-b3ff-8a12901e25ec" /><br>  
+<br><img width="492" height="358" alt="image" src="https://github.com/user-attachments/assets/5e000183-6393-44f0-b514-af498d6c6f0e" /><br>  
+<br><img width="483" height="355" alt="image" src="https://github.com/user-attachments/assets/4f374b87-8b1a-4a5a-ae3d-bc2dc48edfac" /><br>  
+<br><img width="489" height="352" alt="image" src="https://github.com/user-attachments/assets/f9d57f34-5109-47f6-b1e0-2f70265cc3cc" /><br>  
+<br><img width="508" height="354" alt="image" src="https://github.com/user-attachments/assets/d46f171f-f2aa-4aa2-b55e-becd0d81de5f" /><br>  
+<br><img width="501" height="353" alt="image" src="https://github.com/user-attachments/assets/48f0509f-e67c-4caf-a99a-b1a56529a919" /><br>  
+<br><img width="496" height="324" alt="image" src="https://github.com/user-attachments/assets/d5e9500d-6c9c-4c23-8103-36c7b853f18b" /><br>   
   
+## Tes DNS
+Pilih host acak, misal dari smartphone B
+```
+nslookup www.k14.smartcity.lab
+```
+<br><img width="296" height="131" alt="image" src="https://github.com/user-attachments/assets/af0a1c16-e9ed-47d7-a812-786489386461" /><br>
+
+## Tes web
+Buka Web Browser lalu akses:
+`http://www.k14.smartcity.lab`
+<br><img width="861" height="595" alt="image" src="https://github.com/user-attachments/assets/4d09cdb9-5433-4148-a9e5-12c63ad50378" /><br>  
+
+## Tes FTP
+Dari PC CCTV:
+```bash
+ftp ftp.k14.smartcity.lab
+```
+username: cctv, password: cctv14
+
+Pada PC-CCTV, put file yang sudah dibuat, lalu dir  
+<br><img width="604" height="857" alt="image" src="https://github.com/user-attachments/assets/e141b34c-4e64-4e20-a249-a2e8750ff399" /><br>
+
+## Tes email
+user midnight (misal dari puskesmas) & user daylight (misal dari smartphone U)  
+
+1. Daylight (smartphone utara) ke midnight, puskesmas  
+   <br><img width="856" height="272" alt="image" src="https://github.com/user-attachments/assets/37cffb84-e81a-4ea4-88b9-4cb3b682cda3" /><br>
+2. Balasan kiriman dari midnight ke daylight
+   <br><img width="844" height="252" alt="image" src="https://github.com/user-attachments/assets/7209ba95-6c73-4627-8f71-44efcfe11b88" /><br>
+
+## Tes konektivitas OSPF
+
+Memeriksa OSPF Neighbor  
+
+Pada router, jalankan:
+```bash
+show ip ospf neighbor
+```
+  
+R-PUSAT diharapkan memiliki neighbor ke:
+- R-UTARA
+- R-DC
+- R-BARAT
+- R-TIMUR
+- R-SELATAN
+- R-PELABUHAN melalui Tunnel0
+  
+<br><img width="669" height="172" alt="image" src="https://github.com/user-attachments/assets/3aa41fb1-d993-40cf-8408-6df8b4b319f5" /><br>
+
+R-BARAT, R-TIMUR, R-SELATAN hanya punya 1 neighbor yaitu R-PUSAT  
+<br><img width="690" height="74" alt="image" src="https://github.com/user-attachments/assets/feb22c1a-a99d-4437-8dd4-ee62c835ebc2" /><br>  
+<br><img width="661" height="76" alt="image" src="https://github.com/user-attachments/assets/bdf83cc3-1940-45b7-8a13-97c084dfdc97" /><br>  
+<br><img width="673" height="77" alt="image" src="https://github.com/user-attachments/assets/3dfb8eaf-d35e-4804-ae4a-c4a771b80aa6" /><br>  
+
+R-DC punya dua neighbor yaitu R-PUSAT & R-UTARA  
+<br><img width="652" height="95" alt="image" src="https://github.com/user-attachments/assets/bc97d403-4d20-4881-b82b-7934b67c76c1" /><br>  
+
+R-UTARA punya tiga neighbor : R-PUSAT, R-PELABUHAN, dan R-DC  
+<br><img width="677" height="106" alt="image" src="https://github.com/user-attachments/assets/74fd20ca-a0fe-49df-a578-4e7d33b6b4de" /><br>
+
+R-PELABUHAN punya dua neighbor : R-PUSAT & R-SELATAN  
+<br><img width="668" height="89" alt="image" src="https://github.com/user-attachments/assets/5adbc866-21fb-496d-ae29-001f208af10e" /><br>
+
+## Pengujian pemulihan jaringan saat link terputus
+
+Pengujian ini membuktikan bahwa OSPF memulihkan konektivitas secara otomatis lewat jalur lain ketika salah satu link backbone terputus. Link cadangan L7 (R-DC ke R-UTARA, `10.112.97.4/30`) menjadi jalur pengganti  
+
+### Skenario 1 : Link L2 terputus  
+
+Kondisi normal  
+Misal `tracert 8.8.8.8` dari utara ke NAT  
+<br><img width="428" height="166" alt="image" src="https://github.com/user-attachments/assets/7f037185-49ed-485e-807f-a00d4de0d521" /><br>
+
+Jalurnya : Host Utara > L2 > Link to link R-PUSAT & R-ISP > 8.8.8.8  
+  
+Matikan L2 di R-PUSAT dengan
+```
+configure terminal
+interface FastEthernet0/1
+ shutdown
+end
+```
+
+Hasil perintah `tracert` setelah L2 diputus  
+<br><img width="469" height="295" alt="image" src="https://github.com/user-attachments/assets/6c2b7783-6248-4278-97b6-2372bf3a21f4" /><br>
+
+Jalurnya menjadi : Host utara > L7 > L1 > Link to link R-PUSAT & R-ISP > 8.8.8.8
+
+## Static route sudah diganti OSPF
+
+Di semua router:
+```
+show run | include ip route
+```
+  
+* R-PUSAT hanya menampilkan ip route 0.0.0.0 0.0.0.0 203.0.113.113 (default ke ISP, memang diperbolehkan)
+  <br><img width="326" height="53" alt="image" src="https://github.com/user-attachments/assets/652a57bf-21da-4faa-a9f7-888701a46006" /><br>
+* Router lain (R-DC, R-BARAT, R-TIMUR, R-SELATAN, R-UTARA, R-PELABUHAN, R-ISP) tidak menampilkan apa-apa
+  <br><img width="289" height="50" alt="image" src="https://github.com/user-attachments/assets/cdcd3ca9-a5d1-4ea7-956a-36aafeae149e" /><br>
+  <br><img width="298" height="47" alt="image" src="https://github.com/user-attachments/assets/4212b84c-3725-4463-ab67-62832d9f9415" /><br>
+  <br><img width="308" height="49" alt="image" src="https://github.com/user-attachments/assets/0660961c-0bdf-4367-96b7-db46c997392f" /><br>
+
+Pembuktian melalui `show IP route`, kode O artinya rute yang sebelumnya static kini sudah jadi OSPF  
+<br><img width="640" height="383" alt="image" src="https://github.com/user-attachments/assets/112f2adb-a225-469c-a98e-bc54d3179897" /><br>
+
+## Default route hanya di R-PUSAT, router lain dapat dari OSPF
+Perintah:
+```
+show run | include ip route
+show run | section router ospf
+```
+<br><img width="321" height="258" alt="image" src="https://github.com/user-attachments/assets/a2c1bcf6-fadb-4092-bde8-3fe8e025549d" /><br>  
+  
+Satu-satunya ip route adalah default ke ISP, dan di blok OSPF ada baris default-information originate. Itu bukti default dikonfigurasi dan disebarkan dari R-PUSAT  
+  
+Sementara dari router lain tidak ada `default-information originate`  
+<br><img width="326" height="212" alt="image" src="https://github.com/user-attachments/assets/007fb635-ad13-4121-b641-6fae70dc22cf" /><br>  
+
+Di router lain (minimal R-DC, R-UTARA, R-PELABUHAN, plus satu router wilayah):
+```
+show ip route
+show ip route 0.0.0.0
+```
+* Di show ip route harus ada Gateway of last resort is ... to network 0.0.0.0 dan baris O*E2 0.0.0.0/0   
+* Di show ip route 0.0.0.0 harus tertulis Known via "ospf 1" dan type extern 2. Tidak boleh Known via "static"  
+
+## Router tidak mengirim OSPF ke arah LAN
+
+Bukti utama, di tiap router:
+```
+show ip protocols
+```
+Bagian Passive Interface(s): harus berisi interface LAN router itu
+
+| Router | Interface yang harus passive |
+|---|---|
+| R-PUSAT | Fa1/0, Fa1/1 |
+| R-DC | Fa0/1, Fa1/0 |
+| R-BARAT | Fa0/1, Fa1/0 |
+| R-TIMUR | Fa0/1, Fa1/0 |
+| R-SELATAN | Fa0/1, Fa1/0 |
+| R-UTARA | Fa1/0, Fa1/1 |
+| R-PELABUHAN | Fa0/1, Fa1/0 |
+
+Misal di DC  
+<br><img width="536" height="469" alt="image" src="https://github.com/user-attachments/assets/5bf00393-176f-4608-92a5-1d525fb7bd44" /><br>  
+Nb: Sisanya merupakan interface yang belum terpakai
+
+
+
+
+
+
 
 
 
