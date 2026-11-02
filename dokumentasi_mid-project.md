@@ -138,6 +138,44 @@ Layanan aplikasi smart city, domain internal : k14.smartcity.lab
 * Reply diterima balai  
   <br><img width="861" height="269" alt="image" src="https://github.com/user-attachments/assets/b1ee705e-2f73-4cc5-b09d-720ed7632598" /><br>
 
+# OSPF
+Tes link putus (jangan L6):
+
+Dari PC WiFi Utara jalankan ping 8.8.8.8 -t.
+- Di R-PUSAT: `configure terminal`, `interface FastEthernet0/1`, `shutdown`, `end`
+- Tunggu sekitar 40 detik. Ping harus pulih lewat L7 (UTARA, DC, lalu L1) - Cek dengan tracert 8.8.8.8
+- Jalankan no shutdown, lalu pastikan jalur kembali ke L2
+- Ulangi dengan L1 (Ethernet0/0/0 di R-PUSAT) dan tes dari PC CCTV  
+  
+<br><img width="772" height="288" alt="image" src="https://github.com/user-attachments/assets/421e0e5c-5b00-47c4-83c2-6be3b81f6808" /><br>
+  
+Dari smartphone-U  
+<br><img width="431" height="168" alt="image" src="https://github.com/user-attachments/assets/cabcf135-e11a-4634-9682-fef5c510f52b" /><br>
+  
+| Hop | Alamat | Router |
+|---|---|---|
+| 1 | `10.113.0.1` | R-UTARA (gateway WiFi Utara) |
+| 2 | `10.112.97.5` | R-DC, sisi **L7** |
+| 3 | `10.112.97.1` | R-PUSAT, sisi **L1** |
+| 4 | `203.0.113.113` | R-ISP |
+| 5 | `8.8.8.8` | Server internet |
+  
+Saat L2 mati, trafik dari Utara tidak lagi langsung ke PUSAT. Jalurnya memutar lewat L7 ke R-DC, lalu L1 ke R-PUSAT, dan keluar ke internet lewat NAT seperti biasa. Itu yang diminta soal 7: konektivitas pulih otomatis lewat jalur lain tanpa kamu mengubah apa pun  
+  
+<br><img width="672" height="126" alt="image" src="https://github.com/user-attachments/assets/7abd08f0-36d3-4f91-a2f2-bf6aa4cde2a1" /><br>
+Saat shutdown, neighbor 6.6.6.6 dan 7.7.7.7 hilang dan sisanya tetap FULL
+
+Mengembalikan L2
+```
+configure terminal
+interface FastEthernet0/1
+ no shutdown
+end
+```
+<br><img width="669" height="156" alt="image" src="https://github.com/user-attachments/assets/ba4dc8af-6b8d-47eb-b4ed-ee41a2644f33" /><br>
+Tracert dari utara harus kembali  
+<br><img width="425" height="151" alt="image" src="https://github.com/user-attachments/assets/03282998-7fed-4a40-b065-e7e2638c38dc" /><br>
+
 
 
   
