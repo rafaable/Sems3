@@ -92,6 +92,65 @@ Router tujuan R-ISP tidak ada yang menuju router dengan base 10.112.x.x dan hany
 * Di mode Simulation, kirim ping Pegawai ke Kantor Pelabuhan `10.113.160.2` (atau ip yang didapat dari dhcp) lalu buka PDU di R-UTARA. Header paketnya harus menunjukkan ESP  
   <br><img width="550" height="575" alt="image" src="https://github.com/user-attachments/assets/7e344da0-ff72-4391-9ee2-fd1a9bfb9a9c" /><br>
 
+## Nomor 8
+Layanan aplikasi smart city, domain internal : k14.smartcity.lab
+
+**DNS di LAN Server dan Storage DC. Nama www, ftp, dan mail dapat diakses dari seluruh wilayah**  
+
+* DNS di server DC  
+  <br><img width="851" height="436" alt="image" src="https://github.com/user-attachments/assets/c3586d2f-76e5-47f3-bd18-cda943f7fb30" /><br>
+* NS Lookup pegawai balai
+  <br><img width="862" height="553" alt="image" src="https://github.com/user-attachments/assets/a16a70e5-b874-4bbf-ad9e-7177a825cb9f" /><br>
+* NS Lookup sensor pelabuhan
+  <br><img width="822" height="431" alt="image" src="https://github.com/user-attachments/assets/430b321c-b992-457d-8802-aa1058290c92" /><br>
+* NS Lookup PC Selatan  
+  <br><img width="821" height="619" alt="image" src="https://github.com/user-attachments/assets/6e486d09-c67b-4cdb-bf4e-64385c601251" /><br>
+
+**Web di LAN Server Balai Kota, berupa halaman "Portal Smart City Surabaya" yang mencantumkan nomor kelompok dan dapat dibuka dengan nama domain dari semua wilayah**
+
+* Service HTTP di server balai  
+  <br><img width="860" height="460" alt="image" src="https://github.com/user-attachments/assets/a3cc92f3-fa38-4c4d-8888-4f67343b088a" /><br>
+* Pencarian web dengan nama domain, dari PC Timur
+  <br><img width="861" height="430" alt="image" src="https://github.com/user-attachments/assets/566d239c-835b-4b84-a45a-3081ae0a4b21" /><br>
+* Pencarian web dengan nama domain, dari PC Sensor Pelabuhan
+  <br><img width="862" height="441" alt="image" src="https://github.com/user-attachments/assets/f17826db-9734-4c01-aba9-ac11d200d3df" /><br>
+* Pencarian web dengan nama domain, dari PC Balai
+  <br><img width="862" height="430" alt="image" src="https://github.com/user-attachments/assets/8d77116b-232b-4afb-9a69-b20ff89e3d5e" /><br>
+
+**FTP di LAN Server dan Storage DC sebagai penyimpanan rekaman CCTV, dengan akun login. Perangkat di LAN CCTV Kota dapat mengunggah file ke sana**
+  
+* FTP di server & storage DC  
+  <br><img width="858" height="445" alt="image" src="https://github.com/user-attachments/assets/f40df883-e458-4234-a3d7-dd6f6717cfb9" /><br>
+* Login dan pindahkan file yang telah dibuat di text editor  
+  <br><img width="851" height="304" alt="image" src="https://github.com/user-attachments/assets/11ca6f9c-acc5-4795-9174-f794e15f43d3" /><br>
+* Perintah dir menampilkan file yang telah dipindahkan
+  <br><img width="835" height="825" alt="image" src="https://github.com/user-attachments/assets/cb6d0b13-f867-4df5-84bc-6ca9ec983840" /><br>
+
+
+**Email antarpegawai. Pengguna di Balai Kota dan Pelabuhan dapat saling mengirim dan menerima email**
+
+* Tes email dari pegawai balai ke pelabuhan
+  <br><img width="870" height="222" alt="image" src="https://github.com/user-attachments/assets/59612227-110e-4362-a070-5f027a085041" /><br>
+* Pelabuhan receive
+  <br><img width="852" height="274" alt="image" src="https://github.com/user-attachments/assets/4e2fb951-4450-4d7f-adca-f2b0d70552f3" /><br>
+* Buat reply dari pelabuhan
+  <br><img width="853" height="253" alt="image" src="https://github.com/user-attachments/assets/e399d72c-c31c-4ca1-9774-4da82be111fc" /><br>
+* Reply diterima balai  
+  <br><img width="861" height="269" alt="image" src="https://github.com/user-attachments/assets/b1ee705e-2f73-4cc5-b09d-720ed7632598" /><br>
+
+
+
+  
+
+
+
+
+
+
+
+
+ 
+
 
 
     
